@@ -1,4 +1,4 @@
-package controllers
+package controller
 
 import (
 	"encoding/json"
@@ -8,12 +8,12 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/hiromoon/go-api-reference/models"
-	"github.com/hiromoon/go-api-reference/repositories"
+	"github.com/hiromoon/go-api-reference/model"
+	"github.com/hiromoon/go-api-reference/repository"
 )
 
 type UsersController struct {
-	repository *repositories.UserRepository
+	repository *repository.UserRepository
 }
 
 type User struct {
@@ -46,7 +46,7 @@ type UserUpdateResponsePayload struct {
 	User *User `json:"user"`
 }
 
-func NewUsersController(repository *repositories.UserRepository) *UsersController {
+func NewUsersController(repository *repository.UserRepository) *UsersController {
 	return &UsersController{
 		repository: repository,
 	}
@@ -63,7 +63,7 @@ func (c *UsersController) UsersCreateHandler(w http.ResponseWriter, r *http.Requ
 		log.Fatal(err)
 	}
 
-	user := models.NewUser(reqPayload.User.ID, reqPayload.User.Name, reqPayload.User.Password)
+	user := model.NewUser(reqPayload.User.ID, reqPayload.User.Name, reqPayload.User.Password)
 	if err := c.repository.Create(user); err != nil {
 		log.Fatal(err)
 	}

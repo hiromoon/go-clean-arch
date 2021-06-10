@@ -1,4 +1,4 @@
-package middlewares
+package middleware
 
 import (
 	"context"
@@ -8,16 +8,16 @@ import (
 	"strings"
 
 	"github.com/hiromoon/go-api-reference/infra"
-	"github.com/hiromoon/go-api-reference/models"
-	"github.com/hiromoon/go-api-reference/repositories"
+	"github.com/hiromoon/go-api-reference/model"
+	"github.com/hiromoon/go-api-reference/repository"
 )
 
 type BasicAuthenticationMiddleware struct {
 	redis      *infra.Redis
-	repository *repositories.UserRepository
+	repository *repository.UserRepository
 }
 
-func NewBasicAuthenticationMiddleware(redis *infra.Redis, repo *repositories.UserRepository) *BasicAuthenticationMiddleware {
+func NewBasicAuthenticationMiddleware(redis *infra.Redis, repo *repository.UserRepository) *BasicAuthenticationMiddleware {
 	return &BasicAuthenticationMiddleware{
 		redis:      redis,
 		repository: repo,
@@ -34,7 +34,7 @@ func (m *BasicAuthenticationMiddleware) Middleware(next http.Handler) http.Handl
 	})
 }
 
-func (m *BasicAuthenticationMiddleware) authentication(authzHeader string) (*models.User, error) {
+func (m *BasicAuthenticationMiddleware) authentication(authzHeader string) (*model.User, error) {
 	tokens := strings.Split(authzHeader, " ")
 	if tokens[0] != "Basic" {
 		return nil, errors.New("error")
@@ -47,7 +47,7 @@ func (m *BasicAuthenticationMiddleware) authentication(authzHeader string) (*mod
 
 	cred := strings.Split(string(dec), ":")
 	userID, password := cred[0], cred[1]
-	user := models.User{}
+	user := model.User{}
 	err = m.redis.RunWithCache(userID, &user, func(dest interface{}) error {
 		dest, err := m.repository.Get(userID)
 		if err != nil {

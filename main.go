@@ -6,9 +6,9 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/hiromoon/go-api-reference/controllers"
+	"github.com/hiromoon/go-api-reference/controller"
 	"github.com/hiromoon/go-api-reference/infra"
-	"github.com/hiromoon/go-api-reference/repositories"
+	"github.com/hiromoon/go-api-reference/repository"
 )
 
 func main() {
@@ -22,14 +22,14 @@ func main() {
 	defer redis.Close()
 
 	r := mux.NewRouter()
-	// basicAuthMiddleware := middlewares.NewBasicAuthenticationMiddleware(
+	// basicAuthMiddleware := middleware.NewBasicAuthenticationMiddleware(
 	// 	redis,
-	// 	repositories.NewUserRepository(db),
+	// 	repository.NewUserRepository(db),
 	// )
 	// r.Use(basicAuthMiddleware.Middleware)
 
-	usersController := controllers.NewUsersController(
-		repositories.NewUserRepository(db),
+	usersController := controller.NewUsersController(
+		repository.NewUserRepository(db),
 	)
 	r.HandleFunc("/api/v1/users", usersController.UsersCreateHandler).Methods(http.MethodPost)
 	r.HandleFunc("/api/v1/users", usersController.UsersHandler).Methods(http.MethodGet)
