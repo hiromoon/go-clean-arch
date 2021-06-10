@@ -9,11 +9,10 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/hiromoon/go-api-reference/model"
-	"github.com/hiromoon/go-api-reference/repository"
 )
 
 type UsersController struct {
-	repo *repository.UserRepository
+	repo UserRepository
 }
 
 type User struct {
@@ -46,7 +45,15 @@ type UserUpdateResponsePayload struct {
 	User *User `json:"user"`
 }
 
-func NewUsersController(repo *repository.UserRepository) *UsersController {
+type UserRepository interface {
+	GetAll() ([]*model.User, error)
+	Create(user *model.User) error
+	Get(id string) (*model.User, error)
+	Update(user *model.User) error
+	Delete(id string) error
+}
+
+func NewUsersController(repo UserRepository) *UsersController {
 	return &UsersController{
 		repo: repo,
 	}
