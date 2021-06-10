@@ -13,7 +13,7 @@ import (
 )
 
 type UsersController struct {
-	repository *repository.UserRepository
+	repo *repository.UserRepository
 }
 
 type User struct {
@@ -46,13 +46,13 @@ type UserUpdateResponsePayload struct {
 	User *User `json:"user"`
 }
 
-func NewUsersController(repository *repository.UserRepository) *UsersController {
+func NewUsersController(repo *repository.UserRepository) *UsersController {
 	return &UsersController{
-		repository: repository,
+		repo: repo,
 	}
 }
 
-func (c *UsersController) UsersCreateHandler(w http.ResponseWriter, r *http.Request) {
+func (c *UsersController) Create(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Fatal(err)
@@ -64,7 +64,7 @@ func (c *UsersController) UsersCreateHandler(w http.ResponseWriter, r *http.Requ
 	}
 
 	user := model.NewUser(reqPayload.User.ID, reqPayload.User.Name, reqPayload.User.Password)
-	if err := c.repository.Create(user); err != nil {
+	if err := c.repo.Create(user); err != nil {
 		log.Fatal(err)
 	}
 
@@ -79,8 +79,8 @@ func (c *UsersController) UsersCreateHandler(w http.ResponseWriter, r *http.Requ
 	json.NewEncoder(w).Encode(responsePayload)
 }
 
-func (c *UsersController) UsersHandler(w http.ResponseWriter, r *http.Request) {
-	users, err := c.repository.GetAll()
+func (c *UsersController) Index(w http.ResponseWriter, r *http.Request) {
+	users, err := c.repo.GetAll()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -96,10 +96,10 @@ func (c *UsersController) UsersHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(responsePayload)
 }
 
-func (c *UsersController) UserHandler(w http.ResponseWriter, r *http.Request) {
+func (c *UsersController) Show(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	user, err := c.repository.Get(vars["id"])
+	user, err := c.repo.Get(vars["id"])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -115,10 +115,10 @@ func (c *UsersController) UserHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(responsePayload)
 }
 
-func (c *UsersController) UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
+func (c *UsersController) Update(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	user, err := c.repository.Get(vars["id"])
+	user, err := c.repo.Get(vars["id"])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -136,7 +136,7 @@ func (c *UsersController) UserUpdateHandler(w http.ResponseWriter, r *http.Reque
 	user.Name = reqPayload.User.Name
 	user.Password = reqPayload.User.Password
 
-	if err := c.repository.Update(user); err != nil {
+	if err := c.repo.Update(user); err != nil {
 		log.Fatal(err)
 	}
 
@@ -151,10 +151,10 @@ func (c *UsersController) UserUpdateHandler(w http.ResponseWriter, r *http.Reque
 	json.NewEncoder(w).Encode(responsePayload)
 }
 
-func (c *UsersController) UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
+func (c *UsersController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	if err := c.repository.Delete(vars["id"]); err != nil {
+	if err := c.repo.Delete(vars["id"]); err != nil {
 		log.Fatal(err)
 	}
 

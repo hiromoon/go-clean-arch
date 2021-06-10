@@ -31,10 +31,10 @@ func main() {
 	usersController := controller.NewUsersController(
 		repository.NewUserRepository(db),
 	)
-	r.HandleFunc("/api/v1/users", usersController.UsersCreateHandler).Methods(http.MethodPost)
-	r.HandleFunc("/api/v1/users", usersController.UsersHandler).Methods(http.MethodGet)
-	r.HandleFunc("/api/v1/users/{id}", usersController.UserHandler).Methods(http.MethodGet)
-	r.HandleFunc("/api/v1/users/{id}", usersController.UserUpdateHandler).Methods(http.MethodPatch)
-	r.HandleFunc("/api/v1/users/{id}", usersController.UserDeleteHandler).Methods(http.MethodDelete)
+	r.HandleFunc("/api/v1/users", usersController.Create).Methods(http.MethodPost)
+	r.HandleFunc("/api/v1/users", usersController.Index).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/users/{id}", usersController.Show).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/users/{id}", usersController.Update).Methods(http.MethodPatch)
+	r.HandleFunc("/api/v1/users/{id}", usersController.Delete).Methods(http.MethodDelete)
 	log.Fatal(http.ListenAndServe(":8000", r))
 }
