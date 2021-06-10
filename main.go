@@ -8,7 +8,6 @@ import (
 
 	"github.com/hiromoon/go-api-reference/controllers"
 	"github.com/hiromoon/go-api-reference/infra"
-	"github.com/hiromoon/go-api-reference/middlewares"
 	"github.com/hiromoon/go-api-reference/repositories"
 )
 
@@ -23,11 +22,11 @@ func main() {
 	defer redis.Close()
 
 	r := mux.NewRouter()
-	basicAuthMiddleware := middlewares.NewBasicAuthenticationMiddleware(
-		redis,
-		repositories.NewUserRepository(db),
-	)
-	r.Use(basicAuthMiddleware.Middleware)
+	// basicAuthMiddleware := middlewares.NewBasicAuthenticationMiddleware(
+	// 	redis,
+	// 	repositories.NewUserRepository(db),
+	// )
+	// r.Use(basicAuthMiddleware.Middleware)
 
 	usersController := controllers.NewUsersController(
 		repositories.NewUserRepository(db),
