@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"github.com/hiromoon/go-api-reference/domain/model/user"
 	"github.com/hiromoon/go-api-reference/infra"
-	"github.com/hiromoon/go-api-reference/model"
 )
 
 type UserRepository struct {
@@ -21,35 +21,35 @@ func NewUserRepository(db *infra.Database) *UserRepository {
 	}
 }
 
-func (repo *UserRepository) GetAll() ([]*model.User, error) {
+func (repo *UserRepository) GetAll() ([]*user.User, error) {
 	rows := []User{}
 	if err := repo.DB.DB.Select(&rows, "SELECT * FROM users"); err != nil {
 		return nil, err
 	}
 
-	users := []*model.User{}
+	users := []*user.User{}
 	for _, row := range rows {
-		users = append(users, model.NewUser(row.ID, row.Name, row.Password))
+		users = append(users, user.NewUser(row.ID, row.Name, row.Password))
 	}
 
 	return users, nil
 }
 
-func (repo *UserRepository) Create(user *model.User) error {
+func (repo *UserRepository) Create(user *user.User) error {
 	_, err := repo.DB.DB.NamedExec("INSERT INTO users (id, name, password) VALUES (:id, :name, :password)", user)
 	return err
 }
 
-func (repo *UserRepository) Get(id string) (*model.User, error) {
+func (repo *UserRepository) Get(id string) (*user.User, error) {
 	row := User{}
 	if err := repo.DB.DB.Get(&row, "SELECT * FROM users WHERE id=?", id); err != nil {
 		return nil, err
 	}
 
-	return model.NewUser(row.ID, row.Name, row.Password), nil
+	return user.NewUser(row.ID, row.Name, row.Password), nil
 }
 
-func (repo *UserRepository) Update(user *model.User) error {
+func (repo *UserRepository) Update(user *user.User) error {
 	_, err := repo.DB.DB.NamedExec("UPDATE users SET name=:name, password=:password WHERE id=:id", user)
 	return err
 }

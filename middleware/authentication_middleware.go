@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
+	"github.com/hiromoon/go-api-reference/domain/model/user"
 	"net/http"
 	"strings"
 
 	"github.com/hiromoon/go-api-reference/infra"
-	"github.com/hiromoon/go-api-reference/model"
 	"github.com/hiromoon/go-api-reference/repository"
 )
 
@@ -34,7 +34,7 @@ func (m *BasicAuthenticationMiddleware) Middleware(next http.Handler) http.Handl
 	})
 }
 
-func (m *BasicAuthenticationMiddleware) authentication(authzHeader string) (*model.User, error) {
+func (m *BasicAuthenticationMiddleware) authentication(authzHeader string) (*user.User, error) {
 	tokens := strings.Split(authzHeader, " ")
 	if tokens[0] != "Basic" {
 		return nil, errors.New("error")
@@ -47,7 +47,7 @@ func (m *BasicAuthenticationMiddleware) authentication(authzHeader string) (*mod
 
 	cred := strings.Split(string(dec), ":")
 	userID, password := cred[0], cred[1]
-	user := model.User{}
+	user := user.User{}
 	err = m.redis.RunWithCache(userID, &user, func(dest interface{}) error {
 		dest, err := m.repository.Get(userID)
 		if err != nil {

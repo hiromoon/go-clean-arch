@@ -2,13 +2,12 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/hiromoon/go-api-reference/domain/model/user"
 	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
-
-	"github.com/hiromoon/go-api-reference/model"
 )
 
 type UsersController struct {
@@ -70,7 +69,7 @@ func (c *UsersController) Create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	user := model.NewUser(reqPayload.User.ID, reqPayload.User.Name, reqPayload.User.Password)
+	user := user.NewUser(reqPayload.User.ID, reqPayload.User.Name, reqPayload.User.Password)
 	if err := c.repo.Create(user); err != nil {
 		log.Fatal(err)
 	}
