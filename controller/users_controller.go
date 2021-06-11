@@ -11,7 +11,7 @@ import (
 )
 
 type UsersController struct {
-	repo UserRepository
+	repo user.Repository
 }
 
 type User struct {
@@ -44,15 +44,8 @@ type UserUpdateResponsePayload struct {
 	User *User `json:"user"`
 }
 
-type UserRepository interface {
-	GetAll() ([]*model.User, error)
-	Create(user *model.User) error
-	Get(id string) (*model.User, error)
-	Update(user *model.User) error
-	Delete(id string) error
-}
 
-func NewUsersController(repo UserRepository) *UsersController {
+func NewUsersController(repo user.Repository) *UsersController {
 	return &UsersController{
 		repo: repo,
 	}
