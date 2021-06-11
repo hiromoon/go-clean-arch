@@ -9,15 +9,14 @@ import (
 	"strings"
 
 	"github.com/hiromoon/go-api-reference/infra"
-	"github.com/hiromoon/go-api-reference/repository"
 )
 
 type BasicAuthenticationMiddleware struct {
 	redis      *infra.Redis
-	repository *repository.UserRepository
+	repository *infra.UserRepository
 }
 
-func NewBasicAuthenticationMiddleware(redis *infra.Redis, repo *repository.UserRepository) *BasicAuthenticationMiddleware {
+func NewBasicAuthenticationMiddleware(redis *infra.Redis, repo *infra.UserRepository) *BasicAuthenticationMiddleware {
 	return &BasicAuthenticationMiddleware{
 		redis:      redis,
 		repository: repo,

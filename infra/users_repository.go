@@ -1,12 +1,11 @@
-package repository
+package infra
 
 import (
 	"github.com/hiromoon/go-api-reference/domain/model/user"
-	"github.com/hiromoon/go-api-reference/infra"
 )
 
 type UserRepository struct {
-	DB *infra.Database
+	DB *Database
 }
 
 type User struct {
@@ -15,7 +14,7 @@ type User struct {
 	Password string `db:"password"`
 }
 
-func NewUserRepository(db *infra.Database) *UserRepository {
+func NewUserRepository(db *Database) *UserRepository {
 	return &UserRepository{
 		DB: db,
 	}
