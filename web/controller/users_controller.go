@@ -14,6 +14,7 @@ import (
 type UsersController struct {
 	repo               user.Repository
 	userListInteractor port.UserListInputPort
+	userFindInteractor port.UserFindInputPort
 }
 
 type User struct {
@@ -49,10 +50,12 @@ type UserUpdateResponsePayload struct {
 func NewUsersController(
 	repo user.Repository,
 	userListInteractor port.UserListInputPort,
+	userFindInteractor port.UserFindInputPort,
 ) *UsersController {
 	return &UsersController{
 		repo:               repo,
 		userListInteractor: userListInteractor,
+		userFindInteractor: userFindInteractor,
 	}
 }
 
@@ -81,20 +84,24 @@ func (c *UsersController) Index(w http.ResponseWriter, r *http.Request) {
 func (c *UsersController) Show(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	user, err := c.repo.Get(vars["id"])
+	output, err := c.userFindInteractor.Handle(&port.UserFindInputData{UserID: vars["id"]})
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 
 	responsePayload := &UserResponsePayload{User: &User{
-		ID:       user.ID,
-		Name:     user.Name,
-		Password: user.Password,
+		ID:       output.User.ID,
+		Name:     output.User.Name,
+		Password: output.User.Password,
 	}}
-	json.NewEncoder(w).Encode(responsePayload)
+	if err := json.NewEncoder(w).Encode(responsePayload); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func (c *UsersController) Create(w http.ResponseWriter, r *http.Request) {
