@@ -9,7 +9,7 @@ type UserDeleteInteractor struct {
 	repo user.Repository
 }
 
-func NewUserDeleteInteractor(repo user.Repository) *UserDeleteInteractor {
+func NewUserDeleteInteractor(repo user.Repository) port.UserDeleteInputPort {
 	return &UserDeleteInteractor{repo: repo}
 }
 

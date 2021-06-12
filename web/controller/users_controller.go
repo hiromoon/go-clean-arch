@@ -2,21 +2,21 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/hiromoon/go-clean-arch/application/user/port"
-	"github.com/hiromoon/go-clean-arch/domain/model/user"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
+
+	"github.com/hiromoon/go-clean-arch/application/user/port"
+	"github.com/hiromoon/go-clean-arch/domain/model/user"
 )
 
 type UsersController struct {
-	repo                 user.Repository
-	userListInteractor   port.UserListInputPort
-	userFindInteractor   port.UserFindInputPort
-	userCreateInteractor port.UserCreateInputPort
-	userUpdateInteractor port.UserUpdateInputPort
-	userDeleteInteractor port.UserDeleteInputPort
+	UserListInteractor   port.UserListInputPort
+	UserFindInteractor   port.UserFindInputPort
+	UserCreateInteractor port.UserCreateInputPort
+	UserUpdateInteractor port.UserUpdateInputPort
+	UserDeleteInteractor port.UserDeleteInputPort
 }
 
 type User struct {
@@ -57,16 +57,16 @@ func NewUsersController(
 	userDeleteInteractor port.UserDeleteInputPort,
 ) *UsersController {
 	return &UsersController{
-		userListInteractor: userListInteractor,
-		userFindInteractor: userFindInteractor,
-		userCreateInteractor: userCreateInteractor,
-		userUpdateInteractor: userUpdateInteractor,
-		userDeleteInteractor: userDeleteInteractor,
+		UserListInteractor:   userListInteractor,
+		UserFindInteractor:   userFindInteractor,
+		UserCreateInteractor: userCreateInteractor,
+		UserUpdateInteractor: userUpdateInteractor,
+		UserDeleteInteractor: userDeleteInteractor,
 	}
 }
 
 func (c *UsersController) Index(w http.ResponseWriter, r *http.Request) {
-	output, err := c.userListInteractor.Handle(&port.UserListInputData{})
+	output, err := c.UserListInteractor.Handle(&port.UserListInputData{})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -90,7 +90,7 @@ func (c *UsersController) Index(w http.ResponseWriter, r *http.Request) {
 func (c *UsersController) Show(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	output, err := c.userFindInteractor.Handle(&port.UserFindInputData{UserID: vars["id"]})
+	output, err := c.UserFindInteractor.Handle(&port.UserFindInputData{UserID: vars["id"]})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -123,7 +123,7 @@ func (c *UsersController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = c.userCreateInteractor.Handle(&port.UserCreateInputData{
+	_, err = c.UserCreateInteractor.Handle(&port.UserCreateInputData{
 		User: &port.UserData{
 			ID:       reqPayload.User.ID,
 			Name:     reqPayload.User.Name,
@@ -153,7 +153,7 @@ func (c *UsersController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = c.userUpdateInteractor.Handle(&port.UserUpdateInputData{User: &port.UserData{
+	_, err = c.UserUpdateInteractor.Handle(&port.UserUpdateInputData{User: &port.UserData{
 		ID:       vars["id"],
 		Name:     reqPayload.User.Name,
 		Password: reqPayload.User.Password,
@@ -170,7 +170,7 @@ func (c *UsersController) Update(w http.ResponseWriter, r *http.Request) {
 
 func (c *UsersController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	if _, err := c.userDeleteInteractor.Handle(&port.UserDeleteInputData{UserID: vars["id"]}); err != nil {
+	if _, err := c.UserDeleteInteractor.Handle(&port.UserDeleteInputData{UserID: vars["id"]}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

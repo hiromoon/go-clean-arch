@@ -9,7 +9,7 @@ type UserUpdateInteractor struct {
 	repo user.Repository
 }
 
-func NewUserUpdateInteractor(repo user.Repository) *UserUpdateInteractor {
+func NewUserUpdateInteractor(repo user.Repository) port.UserUpdateInputPort {
 	return &UserUpdateInteractor{
 		repo: repo,
 	}

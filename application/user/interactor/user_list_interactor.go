@@ -9,7 +9,7 @@ type UserListInteractor struct {
 	repo user.Repository
 }
 
-func NewUserListInteractor(repo user.Repository) *UserListInteractor {
+func NewUserListInteractor(repo user.Repository) port.UserListInputPort {
 	return &UserListInteractor{repo: repo}
 }
 

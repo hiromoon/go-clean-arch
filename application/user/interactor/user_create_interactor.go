@@ -9,7 +9,7 @@ type UserCreateInteractor struct {
 	repo user.Repository
 }
 
-func NewUserCreateInteractor(repo user.Repository) *UserCreateInteractor {
+func NewUserCreateInteractor(repo user.Repository) port.UserCreateInputPort {
 	return &UserCreateInteractor{
 		repo: repo,
 	}

@@ -14,7 +14,7 @@ type User struct {
 	Password string `db:"password"`
 }
 
-func NewUserRepository(db *Database) *UserRepository {
+func NewUserRepository(db *Database) user.Repository {
 	return &UserRepository{
 		DB: db,
 	}

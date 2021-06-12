@@ -9,7 +9,7 @@ type UserFindInteractor struct {
 	repo user.Repository
 }
 
-func NewUserFindInteractor(repo user.Repository) *UserFindInteractor {
+func NewUserFindInteractor(repo user.Repository) port.UserFindInputPort {
 	return &UserFindInteractor{
 		repo: repo,
 	}
