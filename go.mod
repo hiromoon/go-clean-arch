@@ -7,4 +7,5 @@ require (
 	github.com/gomodule/redigo v1.8.2
 	github.com/gorilla/mux v1.8.0
 	github.com/jmoiron/sqlx v1.2.0
+	go.uber.org/dig v1.11.0 // indirect
 )
