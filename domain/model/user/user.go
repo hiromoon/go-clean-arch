@@ -13,3 +13,11 @@ func NewUser(id string, name string, password string) *User {
 		Password: password,
 	}
 }
+
+func (u *User) ChangeName(name string) {
+	u.Name = name
+}
+
+func (u *User) ChangePassword(password string) {
+	u.Password = password
+}
