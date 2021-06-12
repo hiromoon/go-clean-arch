@@ -5,7 +5,6 @@ import (
 	"github.com/hiromoon/go-api-reference/application/user/port"
 	"github.com/hiromoon/go-api-reference/domain/model/user"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -17,6 +16,7 @@ type UsersController struct {
 	userFindInteractor   port.UserFindInputPort
 	userCreateInteractor port.UserCreateInputPort
 	userUpdateInteractor port.UserUpdateInputPort
+	userDeleteInteractor port.UserDeleteInputPort
 }
 
 type User struct {
@@ -55,6 +55,7 @@ func NewUsersController(
 	userFindInteractor port.UserFindInputPort,
 	userCreateInteractor port.UserCreateInputPort,
 	userUpdateInteractor port.UserUpdateInputPort,
+	userDeleteInteractor port.UserDeleteInputPort,
 ) *UsersController {
 	return &UsersController{
 		repo:               repo,
@@ -62,6 +63,7 @@ func NewUsersController(
 		userFindInteractor: userFindInteractor,
 		userCreateInteractor: userCreateInteractor,
 		userUpdateInteractor: userUpdateInteractor,
+		userDeleteInteractor: userDeleteInteractor,
 	}
 }
 
@@ -170,9 +172,9 @@ func (c *UsersController) Update(w http.ResponseWriter, r *http.Request) {
 
 func (c *UsersController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-
-	if err := c.repo.Delete(vars["id"]); err != nil {
-		log.Fatal(err)
+	if _, err := c.userDeleteInteractor.Handle(&port.UserDeleteInputData{UserID: vars["id"]}); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusNoContent)

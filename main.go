@@ -35,6 +35,7 @@ func main() {
 		interactor.NewUserFindInteractor(userRepository),
 		interactor.NewUserCreateInteractor(userRepository),
 		interactor.NewUserUpdateInteractor(userRepository),
+		interactor.NewUserDeleteInteractor(userRepository),
 	)
 	r.HandleFunc("/api/v1/users", usersController.Create).Methods(http.MethodPost)
 	r.HandleFunc("/api/v1/users", usersController.Index).Methods(http.MethodGet)
