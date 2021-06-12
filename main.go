@@ -1,14 +1,14 @@
 package main
 
 import (
+	"github.com/hiromoon/go-api-reference/application/user/interactor"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
-	"github.com/hiromoon/go-api-reference/controller"
 	"github.com/hiromoon/go-api-reference/infra"
-	"github.com/hiromoon/go-api-reference/repository"
+	"github.com/hiromoon/go-api-reference/web/controller"
 )
 
 func main() {
@@ -28,8 +28,10 @@ func main() {
 	// )
 	// r.Use(basicAuthMiddleware.Middleware)
 
+	userRepository := infra.NewUserRepository(db)
 	usersController := controller.NewUsersController(
-		repository.NewUserRepository(db),
+		userRepository,
+		interactor.NewUserListInteractor(userRepository),
 	)
 	r.HandleFunc("/api/v1/users", usersController.Create).Methods(http.MethodPost)
 	r.HandleFunc("/api/v1/users", usersController.Index).Methods(http.MethodGet)
