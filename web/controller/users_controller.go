@@ -16,6 +16,7 @@ type UsersController struct {
 	userListInteractor   port.UserListInputPort
 	userFindInteractor   port.UserFindInputPort
 	userCreateInteractor port.UserCreateInputPort
+	userUpdateInteractor port.UserUpdateInputPort
 }
 
 type User struct {
@@ -53,12 +54,14 @@ func NewUsersController(
 	userListInteractor port.UserListInputPort,
 	userFindInteractor port.UserFindInputPort,
 	userCreateInteractor port.UserCreateInputPort,
+	userUpdateInteractor port.UserUpdateInputPort,
 ) *UsersController {
 	return &UsersController{
 		repo:               repo,
 		userListInteractor: userListInteractor,
 		userFindInteractor: userFindInteractor,
 		userCreateInteractor: userCreateInteractor,
+		userUpdateInteractor: userUpdateInteractor,
 	}
 }
 
@@ -139,37 +142,30 @@ func (c *UsersController) Create(w http.ResponseWriter, r *http.Request) {
 func (c *UsersController) Update(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	user, err := c.repo.Get(vars["id"])
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	var reqPayload UserUpdateRequestPayload
 	if err := json.Unmarshal(body, &reqPayload); err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	user.ID = reqPayload.User.ID
-	user.Name = reqPayload.User.Name
-	user.Password = reqPayload.User.Password
+	_, err = c.userUpdateInteractor.Handle(&port.UserUpdateInputData{User: &port.UserData{
+		ID:       vars["id"],
+		Name:     reqPayload.User.Name,
+		Password: reqPayload.User.Password,
+	}})
 
-	if err := c.repo.Update(user); err != nil {
-		log.Fatal(err)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-
-	responsePayload := &UserUpdateResponsePayload{User: &User{
-		ID:       user.ID,
-		Name:     user.Name,
-		Password: user.Password,
-	}}
-	json.NewEncoder(w).Encode(responsePayload)
 }
 
 func (c *UsersController) Delete(w http.ResponseWriter, r *http.Request) {
