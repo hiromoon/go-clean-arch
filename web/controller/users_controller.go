@@ -12,9 +12,10 @@ import (
 )
 
 type UsersController struct {
-	repo               user.Repository
-	userListInteractor port.UserListInputPort
-	userFindInteractor port.UserFindInputPort
+	repo                 user.Repository
+	userListInteractor   port.UserListInputPort
+	userFindInteractor   port.UserFindInputPort
+	userCreateInteractor port.UserCreateInputPort
 }
 
 type User struct {
@@ -51,11 +52,13 @@ func NewUsersController(
 	repo user.Repository,
 	userListInteractor port.UserListInputPort,
 	userFindInteractor port.UserFindInputPort,
+	userCreateInteractor port.UserCreateInputPort,
 ) *UsersController {
 	return &UsersController{
 		repo:               repo,
 		userListInteractor: userListInteractor,
 		userFindInteractor: userFindInteractor,
+		userCreateInteractor: userCreateInteractor,
 	}
 }
 
@@ -107,28 +110,30 @@ func (c *UsersController) Show(w http.ResponseWriter, r *http.Request) {
 func (c *UsersController) Create(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	var reqPayload UsersCreateRequestPayload
 	if err := json.Unmarshal(body, &reqPayload); err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	user := user.NewUser(reqPayload.User.ID, reqPayload.User.Name, reqPayload.User.Password)
-	if err := c.repo.Create(user); err != nil {
-		log.Fatal(err)
+	_, err = c.userCreateInteractor.Handle(&port.UserCreateInputData{
+		User: &port.UserData{
+			ID:       reqPayload.User.ID,
+			Name:     reqPayload.User.Name,
+			Password: reqPayload.User.Password,
+		},
+	})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-
-	responsePayload := &UsersCreateResponsePayload{User: &User{
-		ID:       user.ID,
-		Name:     user.Name,
-		Password: user.Password,
-	}}
-	json.NewEncoder(w).Encode(responsePayload)
 }
 
 func (c *UsersController) Update(w http.ResponseWriter, r *http.Request) {

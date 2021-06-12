@@ -33,6 +33,7 @@ func main() {
 		userRepository,
 		interactor.NewUserListInteractor(userRepository),
 		interactor.NewUserFindInteractor(userRepository),
+		interactor.NewUserCreateInteractor(userRepository),
 	)
 	r.HandleFunc("/api/v1/users", usersController.Create).Methods(http.MethodPost)
 	r.HandleFunc("/api/v1/users", usersController.Index).Methods(http.MethodGet)
