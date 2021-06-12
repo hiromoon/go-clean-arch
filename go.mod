@@ -1,4 +1,4 @@
-module github.com/hiromoon/go-api-reference
+module github.com/hiromoon/go-clean-arch
 
 go 1.15
 

@@ -1,7 +1,7 @@
 package infra
 
 import (
-	"github.com/hiromoon/go-api-reference/domain/model/user"
+	"github.com/hiromoon/go-clean-arch/domain/model/user"
 )
 
 type UserRepository struct {

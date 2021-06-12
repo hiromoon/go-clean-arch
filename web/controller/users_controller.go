@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/hiromoon/go-api-reference/application/user/port"
-	"github.com/hiromoon/go-api-reference/domain/model/user"
+	"github.com/hiromoon/go-clean-arch/application/user/port"
+	"github.com/hiromoon/go-clean-arch/domain/model/user"
 	"io/ioutil"
 	"net/http"
 

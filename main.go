@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/hiromoon/go-api-reference/application/user/interactor"
+	"github.com/hiromoon/go-clean-arch/application/user/interactor"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
-	"github.com/hiromoon/go-api-reference/infra"
-	"github.com/hiromoon/go-api-reference/web/controller"
+	"github.com/hiromoon/go-clean-arch/infra"
+	"github.com/hiromoon/go-clean-arch/web/controller"
 )
 
 func main() {

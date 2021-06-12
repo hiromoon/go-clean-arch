@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
-	"github.com/hiromoon/go-api-reference/domain/model/user"
+	"github.com/hiromoon/go-clean-arch/domain/model/user"
 	"net/http"
 	"strings"
 
-	"github.com/hiromoon/go-api-reference/infra"
+	"github.com/hiromoon/go-clean-arch/infra"
 )
 
 type BasicAuthenticationMiddleware struct {
