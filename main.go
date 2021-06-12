@@ -30,7 +30,6 @@ func main() {
 
 	userRepository := infra.NewUserRepository(db)
 	usersController := controller.NewUsersController(
-		userRepository,
 		interactor.NewUserListInteractor(userRepository),
 		interactor.NewUserFindInteractor(userRepository),
 		interactor.NewUserCreateInteractor(userRepository),

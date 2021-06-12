@@ -50,7 +50,6 @@ type UserUpdateResponsePayload struct {
 }
 
 func NewUsersController(
-	repo user.Repository,
 	userListInteractor port.UserListInputPort,
 	userFindInteractor port.UserFindInputPort,
 	userCreateInteractor port.UserCreateInputPort,
@@ -58,7 +57,6 @@ func NewUsersController(
 	userDeleteInteractor port.UserDeleteInputPort,
 ) *UsersController {
 	return &UsersController{
-		repo:               repo,
 		userListInteractor: userListInteractor,
 		userFindInteractor: userFindInteractor,
 		userCreateInteractor: userCreateInteractor,
